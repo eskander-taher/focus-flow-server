@@ -2,37 +2,12 @@
 
 import express from "express";
 import cors from "cors";
-import helmet from "helmet";
-import rateLimit from "express-rate-limit";
-import compression from "compression";
 import connectDB from "./config/db.js";
 import errorHandler from "./middleware/errorHandler.js";
 import usersRouter from "./routes/users.js";
 import sessionsRouter from "./routes/sessions.js";
 
 const app = express();
-
-// Security middleware
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:", "blob:"],
-        scriptSrc: ["'self'"],
-        connectSrc: [
-          "'self'",
-          "http://localhost:5173",
-          "http://127.0.0.1:5173",
-          "https://focus-flow-client.vercel.app",
-        ],
-      },
-    },
-    crossOriginEmbedderPolicy: false,
-  })
-);
 
 // CORS configuration
 app.use(
@@ -50,33 +25,6 @@ app.use(
   })
 );
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 1000,
-  message: {
-    error: "Too many requests from this IP, please try again later.",
-    retryAfter: "15 minutes",
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
-
-// Rate limiting for auth routes
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 50,
-  message: {
-    error: "Too many authentication attempts, please try again later.",
-    retryAfter: "15 minutes",
-  },
-});
-
-// Compression middleware
-app.use(compression());
-
 // Body parsing with JSON validation
 app.use(
   express.json({
@@ -93,21 +41,6 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
-// Request logging
-app.use((req, res, next) => {
-  const start = Date.now();
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - ${req.ip}`);
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    console.log(
-      `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - ${res.statusCode} - ${duration}ms`
-    );
-  });
-
-  next();
-});
 
 // Health
 app.get("/health", (req, res) => {
@@ -131,7 +64,7 @@ app.get("/", (req, res) => {
 connectDB();
 
 // Routes
-app.use("/api/users", authLimiter, usersRouter);
+app.use("/api/users", usersRouter);
 app.use("/api/sessions", sessionsRouter);
 
 // 404

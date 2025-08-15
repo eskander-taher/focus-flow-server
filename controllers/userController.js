@@ -91,7 +91,7 @@ export const login = async (req, res) => {
     if (!user) {
       console.log("User not found:", username);
       return res.status(401).json({
-        error: { message: "Invalid email or password" },
+        error: { message: "Invalid username or password" },
       });
     }
 
@@ -100,7 +100,7 @@ export const login = async (req, res) => {
     if (!isMatch) {
       console.log("Password mismatch for:", email);
       return res.status(401).json({
-        error: { message: "Invalid email or password" },
+        error: { message: "Invalid username or password" },
       });
     }
 
