@@ -21,3 +21,4 @@ router.delete("/", auth, sessionController.clearSessions);
 export default router;
 
 
+
