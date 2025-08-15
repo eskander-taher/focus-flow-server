@@ -1,9 +1,9 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const userController = require("../controllers/userController");
-const auth = require("../middleware/auth");
-const validate = require("../middleware/validate");
-const Joi = require("joi");
+import * as userController from "../controllers/userController.js";
+import auth from "../middleware/auth.js";
+import validate from "../middleware/validate.js";
+import Joi from "joi";
 
 // Validation schemas
 const registerSchema = Joi.object({
@@ -48,4 +48,4 @@ router.get("/me", auth, userController.getMe);
 // Update user profile
 router.put("/profile", auth, validate(profileUpdateSchema), userController.updateProfile);
 
-module.exports = router;
+export default router;

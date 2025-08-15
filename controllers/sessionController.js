@@ -1,7 +1,7 @@
-const Session = require("../models/Session");
+import Session from "../models/Session.js";
 
 // GET /api/sessions - list sessions for current user
-exports.getSessions = async (req, res) => {
+export const getSessions = async (req, res) => {
   try {
     const sessions = await Session.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json({ sessions });
@@ -11,7 +11,7 @@ exports.getSessions = async (req, res) => {
 };
 
 // POST /api/sessions - create a new session
-exports.createSession = async (req, res) => {
+export const createSession = async (req, res) => {
   try {
     const { goal, duration, result, startTime, endTime, completed } = req.body;
 
@@ -36,7 +36,7 @@ exports.createSession = async (req, res) => {
 };
 
 // DELETE /api/sessions - delete all sessions for current user
-exports.clearSessions = async (req, res) => {
+export const clearSessions = async (req, res) => {
   try {
     await Session.deleteMany({ user: req.user.id });
     res.json({ message: "All sessions cleared" });

@@ -1,14 +1,14 @@
 // Server app configuration (exported app)
 
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
-const compression = require("compression");
-const connectDB = require("./config/db");
-const errorHandler = require("./middleware/errorHandler");
-const usersRouter = require("./routes/users");
-const sessionsRouter = require("./routes/sessions");
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import compression from "compression";
+import connectDB from "./config/db.js";
+import errorHandler from "./middleware/errorHandler.js";
+import usersRouter from "./routes/users.js";
+import sessionsRouter from "./routes/sessions.js";
 
 const app = express();
 
@@ -140,6 +140,6 @@ app.use("*", (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-module.exports = app;
+export default app;
 
 

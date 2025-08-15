@@ -1,9 +1,9 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const auth = require("../middleware/auth");
-const validate = require("../middleware/validate");
-const Joi = require("joi");
-const sessionController = require("../controllers/sessionController");
+import auth from "../middleware/auth.js";
+import validate from "../middleware/validate.js";
+import Joi from "joi";
+import * as sessionController from "../controllers/sessionController.js";
 
 const createSchema = Joi.object({
   goal: Joi.string().min(1).required(),
@@ -18,6 +18,6 @@ router.get("/", auth, sessionController.getSessions);
 router.post("/", auth, validate(createSchema), sessionController.createSession);
 router.delete("/", auth, sessionController.clearSessions);
 
-module.exports = router;
+export default router;
 
 
